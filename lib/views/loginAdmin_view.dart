@@ -10,7 +10,7 @@ class TextFieldExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
 
-      home: Login(),
+      home: LoginAdmin(),
     );
   }
 }
@@ -18,14 +18,14 @@ class TextFieldExampleApp extends StatelessWidget {
 
 
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class LoginAdmin extends StatefulWidget {
+  const LoginAdmin({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginAdmin> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<LoginAdmin> {
 
   late TextEditingController _controller;
 
@@ -66,28 +66,43 @@ class _LoginState extends State<Login> {
 
           ),),
 
-        body:Center(child:
+        body:Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
 
-        Column(
+
+        Center(child:
+
+            Column(
 
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              UserInputField(controller: _controller,hint: 'usuario',),
-              UserInputField(controller: _controller2, hint: 'contraseña',),
+
+            children:  [
+              Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: UserInputField(controller: _controller,hint: 'usuario')),
+
+              Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: UserInputField(controller: _controller2, hint: 'contraseña',)),
+
               ElevatedButton(onPressed: (){print('next');}, child: Icon(Icons.login),),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('¿Nuevo en CitySOSHelper?'),
-                    TextButton(onPressed: (){print('registrarse');}, child: Text('Registrate ahora',style: TextStyle(color: Colors.red),))
-                  ])
+
             ]
 
-
-
-
         )
-        ));
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+
+            Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextButton(onPressed: (){print('ayuda');}, child: Text('¿Necesitas ayuda?',style: TextStyle(color: Colors.red),))
+            )])
+
+        ]
+    ));
   }
 
 }
