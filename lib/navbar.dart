@@ -1,8 +1,7 @@
 import 'package:citysos_police/views/home_view.dart';
 import 'package:citysos_police/views/loginAdmin_view.dart';
-import 'package:citysos_police/views/login_view.dart';
-import 'package:citysos_police/views/notifications_view.dart';
 import 'package:citysos_police/views/news_view.dart';
+import 'package:citysos_police/views/notifications_view.dart';
 import 'package:citysos_police/views/user_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +21,8 @@ class _NavbarState extends State<Navbar> {
     final colors = Theme.of(context).colorScheme;
 
     final views = [
-      const Login(),
-      const LoginAdmin(),
+      const Home(),
+      const News(),
       const Notifications(),
       const User(),
     ];
