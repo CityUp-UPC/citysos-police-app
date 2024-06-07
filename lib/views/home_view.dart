@@ -23,9 +23,27 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Incidentes pendientes'),
+        title: Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              onPressed: () {
+              },
+            ),
+            const SizedBox(width: 8.0),
+            Text(
+              'Incidentes pendientes',
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
         backgroundColor: Colors.red,
-        titleTextStyle: TextStyle(color: Colors.white),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _futureIncidents,

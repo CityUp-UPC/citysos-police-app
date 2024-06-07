@@ -14,6 +14,8 @@ class IncidentService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('token') ?? '';
 
+      print('Response status: ${token}');
+
       final response = await http.get(
         Uri.parse('$baseUrl/pendients'),
         headers: {

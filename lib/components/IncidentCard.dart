@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class IncidentCard extends StatelessWidget {
   final String description;
@@ -29,103 +30,54 @@ class IncidentCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
-              title: Text(
-                'Description:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                description,
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text(
-                'Date:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                date,
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text(
-                'Address:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                address,
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text(
-                'District:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                district,
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text(
-                'Status:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                status,
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            SizedBox(height: 16),
-            Container(
-              height: 200, // Adjust the height as needed
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(latitude, longitude),
-                  zoom: 12,
-                ),
-                markers: {
-                  Marker(
-                    markerId: MarkerId('incident_location'),
-                    position: LatLng(latitude, longitude),
+            GestureDetector(
+              onDoubleTap: () {
+                _launchGoogleMaps();
+              },
+              child: Container(
+                height: 200,
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(latitude, longitude),
+                    zoom: 12,
                   ),
-                },
+                  markers: {
+                    Marker(
+                      markerId: MarkerId('incident_location'),
+                      position: LatLng(latitude, longitude),
+                    ),
+                  },
+                ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
+            _buildDetailRow(
+              title: 'Descripción:',
+              content: description,
+              icon: Icons.description,
+            ),
+            _buildDetailRow(
+              title: 'Fecha:',
+              content: date,
+              icon: Icons.date_range,
+            ),
+            _buildDetailRow(
+              title: 'Dirección:',
+              content: address,
+              icon: Icons.place,
+            ),
+            _buildDetailRow(
+              title: 'Distrito:',
+              content: district,
+              icon: Icons.location_city,
+            ),
+            const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -139,5 +91,48 @@ class IncidentCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildDetailRow({
+    required String title,
+    required String content,
+    required IconData icon,
+  }) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 16,
+          color: Colors.grey,
+        ),
+        const SizedBox(width: 8.0),
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            content,
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _launchGoogleMaps() async {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
