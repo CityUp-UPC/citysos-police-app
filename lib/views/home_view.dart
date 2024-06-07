@@ -12,11 +12,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late Future<List<Map<String, dynamic>>> _futureIncidents;
+  final _incidentService = IncidentService(); // Instantiate IncidentService
 
   @override
   void initState() {
     super.initState();
-    _futureIncidents = IncidentService().getPendingIncidents();
+    _futureIncidents = _incidentService.getPendingIncidents();
+  }
+
+  void _refreshIncidents() {
+    setState(() {
+      _futureIncidents = _incidentService.getPendingIncidents();
+    });
   }
 
   @override
@@ -31,6 +38,7 @@ class _HomeState extends State<Home> {
                 color: Colors.white,
               ),
               onPressed: () {
+                // Handle home button pressed
               },
             ),
             const SizedBox(width: 8.0),
@@ -72,6 +80,12 @@ class _HomeState extends State<Home> {
             );
           }
         },
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: _refreshIncidents,
+        tooltip: 'Actualizar',
+        child: Icon(Icons.refresh),
       ),
     );
   }

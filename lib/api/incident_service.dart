@@ -14,8 +14,6 @@ class IncidentService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('token') ?? '';
 
-      print('Response status: ${token}');
-
       final response = await http.get(
         Uri.parse('$baseUrl/pendients'),
         headers: {
@@ -25,6 +23,7 @@ class IncidentService {
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
+        // Reverse the list before returning it
         return jsonData.map((data) => {
           'description': data['description'],
           'date': data['date'],
@@ -33,7 +32,7 @@ class IncidentService {
           'latitude': double.parse(data['latitude']),
           'longitude': double.parse(data['longitude']),
           'status': data['status'],
-        }).toList();
+        }).toList().reversed.toList();
       } else {
         String token = AuthProvider().getToken;
         throw Exception('Failed to load data ${token}');
