@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthProvider with ChangeNotifier {
   bool _isLoggedIn = false;
@@ -16,6 +17,15 @@ class AuthProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     _token = prefs.getString('token') ?? '';
+
+    if (_isLoggedIn) {
+      if (JwtDecoder.isExpired(_token)) {
+        _isLoggedIn = false;
+        _token = '';
+        _saveLoginStatus();
+      }
+    }
+
     notifyListeners();
   }
 

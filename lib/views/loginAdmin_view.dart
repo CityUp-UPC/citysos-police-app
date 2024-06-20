@@ -49,8 +49,9 @@ class _LoginState extends State<LoginAdmin> {
 
       final response = await _authService.login(username, password, 'no-device-token');
 
-      if (response != false) {
-        final Map<String, dynamic> tokenData = jsonDecode(response.body) as Map<String, dynamic>;
+      final Map<String, dynamic> tokenData = jsonDecode(response.body) as Map<String, dynamic>;
+
+      if (tokenData['token'] != null && tokenData['token'].toString().isNotEmpty) {
         Provider.of<AuthProvider>(context, listen: false).login(tokenData['token'].toString());
       } else {
         // Show error message
@@ -134,7 +135,6 @@ class _LoginState extends State<LoginAdmin> {
                   const SizedBox(height: 30),
                   ElevatedButton.icon(
                     onPressed: _login,
-                    icon: const Icon(Icons.login),
                     label: const Text('Iniciar sesión'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),

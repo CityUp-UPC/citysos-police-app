@@ -19,7 +19,6 @@ class AuthService {
         headers: {'Content-Type': 'application/json'},
       );
 
-
       return response;
     } catch (e) {
       print('Error during login: $e');

@@ -1,3 +1,3 @@
 class ApiUrlGlobal {
-  static const String baseUrl = 'https://citysos-api.onrender.com';
+  static const String baseUrl = 'http://192.168.1.36:8080';
 }
