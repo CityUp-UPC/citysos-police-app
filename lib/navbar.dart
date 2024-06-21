@@ -1,7 +1,7 @@
 import 'package:citysos_police/views/home_view.dart';
 import 'package:citysos_police/views/login_view.dart';
-import 'package:citysos_police/views/news_view.dart';
-import 'package:citysos_police/views/notifications_view.dart';
+import 'package:citysos_police/views/inprogress_view.dart';
+import 'package:citysos_police/views/history_view.dart';
 import 'package:citysos_police/views/user_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +9,24 @@ import 'package:flutter/material.dart';
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
 
+  static final GlobalKey<_NavbarState> navigatorKey = GlobalKey<_NavbarState>();
+
   @override
-  State<Navbar> createState() => _NavbarState();
+  _NavbarState createState() => _NavbarState();
+
+  static _NavbarState? of(BuildContext context) {
+    return context.findAncestorStateOfType<_NavbarState>();
+  }
 }
 
 class _NavbarState extends State<Navbar> {
   int selectedIndex = 0;
+
+  void setIndex(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +34,8 @@ class _NavbarState extends State<Navbar> {
 
     final views = [
       const Home(),
-      const News(),
-      const Notifications(),
+      const InProgress(),
+      const History(),
       const User(),
     ];
 
@@ -59,7 +71,7 @@ class _NavbarState extends State<Navbar> {
             label: 'Inicio',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper),
+            icon: Icon(Icons.local_police_outlined),
             activeIcon: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -67,13 +79,13 @@ class _NavbarState extends State<Navbar> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.newspaper, color: colors.primary),
+                child: Icon(Icons.local_police_rounded, color: colors.primary),
               ),
             ),
-            label: 'Noticias',
+            label: 'En Progreso',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
+            icon: Icon(Icons.bar_chart_outlined),
             activeIcon: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -81,10 +93,10 @@ class _NavbarState extends State<Navbar> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.notifications, color: colors.primary),
+                child: Icon(Icons.bar_chart_rounded, color: colors.primary),
               ),
             ),
-            label: 'Notificaciones',
+            label: 'Historial',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -98,7 +110,7 @@ class _NavbarState extends State<Navbar> {
                 child: Icon(Icons.person, color: colors.primary),
               ),
             ),
-            label: 'Perfil',
+            label: 'Usuario',
           ),
         ],
         backgroundColor: colors.background,
