@@ -1,5 +1,5 @@
 import 'package:citysos_police/views/home_view.dart';
-import 'package:citysos_police/views/loginAdmin_view.dart';
+import 'package:citysos_police/views/login_view.dart';
 import 'package:citysos_police/views/news_view.dart';
 import 'package:citysos_police/views/notifications_view.dart';
 import 'package:citysos_police/views/user_view.dart';

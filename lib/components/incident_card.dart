@@ -1,8 +1,11 @@
+import 'package:citysos_police/api/police_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class IncidentCard extends StatelessWidget {
+  final int id;
   final String description;
   final String date;
   final String address;
@@ -13,6 +16,7 @@ class IncidentCard extends StatelessWidget {
 
   const IncidentCard({
     Key? key,
+    required this.id,
     required this.description,
     required this.date,
     required this.address,
@@ -24,6 +28,8 @@ class IncidentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = DateFormat('dd-MM-yyyy HH:mm:ss').format(DateTime.parse(date));
+
     return Card(
       margin: const EdgeInsets.all(8.0),
       elevation: 4,
@@ -41,7 +47,7 @@ class IncidentCard extends StatelessWidget {
                 _launchGoogleMaps();
               },
               child: Container(
-                height: 200,
+                height: 50,
                 child: GoogleMap(
                   initialCameraPosition: CameraPosition(
                     target: LatLng(latitude, longitude),
@@ -64,7 +70,7 @@ class IncidentCard extends StatelessWidget {
             ),
             _buildDetailRow(
               title: 'Fecha:',
-              content: date,
+              content: formattedDate,
               icon: Icons.date_range,
             ),
             _buildDetailRow(
@@ -82,7 +88,7 @@ class IncidentCard extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Add your onPressed logic here
+                  _acceptIncident(context); // Pass the context here
                 },
                 child: Text('Aceptar'),
               ),
@@ -105,7 +111,7 @@ class IncidentCard extends StatelessWidget {
           size: 16,
           color: Colors.grey,
         ),
-        const SizedBox(width: 8.0),
+        const SizedBox(width: 2.0),
         Expanded(
           child: Text(
             title,
@@ -134,5 +140,46 @@ class IncidentCard extends StatelessWidget {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void _acceptIncident(BuildContext context) { // Accept context as a parameter
+    PoliceService policeService = PoliceService();
+    policeService.joinIncident(id).then((response) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Incidente aceptado'),
+            content: const Text('Se ha aceptado el incidente.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cerrar'),
+              ),
+            ],
+          );
+        },
+      );
+    }).catchError((error) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Error en aceptar'),
+            content: Text('No se ha podido aceptar el incidente. Por favor, inténtelo de nuevo. ${error.toString()}'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cerrar'),
+              ),
+            ],
+          );
+        },
+      );
+    });
   }
 }

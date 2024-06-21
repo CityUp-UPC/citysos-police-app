@@ -1,4 +1,4 @@
-import 'package:citysos_police/views/loginAdmin_view.dart';
+import 'package:citysos_police/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'config/auth_provider.dart';

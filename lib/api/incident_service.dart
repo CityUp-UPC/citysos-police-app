@@ -21,22 +21,18 @@ class IncidentService {
         },
       );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> jsonData = jsonDecode(response.body);
-        // Reverse the list before returning it
-        return jsonData.map((data) => {
-          'description': data['description'],
-          'date': data['date'],
-          'address': data['address'],
-          'district': data['district'],
-          'latitude': double.parse(data['latitude']),
-          'longitude': double.parse(data['longitude']),
-          'status': data['status'],
-        }).toList().reversed.toList();
-      } else {
-        String token = AuthProvider().getToken;
-        throw Exception('Failed to load data ${token}');
-      }
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      // Reverse the list before returning it
+      return jsonData.map((data) => {
+        'id': data['id'],
+        'description': data['description'],
+        'date': data['date'],
+        'address': data['address'],
+        'district': data['district'],
+        'latitude': double.parse(data['latitude']),
+        'longitude': double.parse(data['longitude']),
+        'status': data['status'],
+      }).toList().reversed.toList();
     } catch (e) {
       String token = AuthProvider().getToken;
       throw Exception('Error fetching data: $e $token');

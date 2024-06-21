@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:citysos_police/api/incident_service.dart';
 
-import '../components/IncidentCard.dart';
+import '../components/incident_card.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -68,6 +68,7 @@ class _HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 final incident = snapshot.data![index];
                 return IncidentCard(
+                  id: incident['id'],
                   description: incident['description'],
                   date: incident['date'],
                   address: incident['address'],
