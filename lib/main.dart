@@ -1,10 +1,16 @@
+import 'package:citysos_police/api/firebase_api.dart';
+import 'package:citysos_police/firebase_options.dart';
 import 'package:citysos_police/views/login_view.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'config/auth_provider.dart';
 import 'navbar.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
   runApp(const MyApp());
 }
 

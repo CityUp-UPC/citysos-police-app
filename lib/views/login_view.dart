@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,19 @@ class _LoginState extends State<LoginAdmin> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   AuthService _authService = AuthService();
+  String? _deviceToken;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirebase();
+  }
+
+  Future<void> _initializeFirebase() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    _deviceToken = await messaging.getToken();
+    print("Device Token: $_deviceToken");
+  }
 
   @override
   void dispose() {
@@ -47,7 +61,7 @@ class _LoginState extends State<LoginAdmin> {
       final username = _controller.text;
       final password = _controller2.text;
 
-      final response = await _authService.login(username, password, 'no-device-token');
+      final response = await _authService.login(username, password, _deviceToken ?? 'no-device-token');
 
       final Map<String, dynamic> tokenData = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -136,6 +150,7 @@ class _LoginState extends State<LoginAdmin> {
                   ElevatedButton.icon(
                     onPressed: _login,
                     label: const Text('Iniciar sesión'),
+                    icon: Icon(Icons.login),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                       shape: RoundedRectangleBorder(
