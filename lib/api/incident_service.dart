@@ -40,6 +40,36 @@ class IncidentService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getIncidents() async {
+    try {
+      print('Getting incidents');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token') ?? '';
+
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      // Reverse the list before returning it
+      return jsonData.map((data) => {
+        'description': data['description'],
+        'date': data['date'],
+        'address': data['address'],
+        'district': data['district'],
+        'latitude': double.parse(data['latitude']),
+        'longitude': double.parse(data['longitude']),
+        'status': data['status'],
+      }).toList().reversed.toList();
+    } catch (e) {
+      String token = AuthProvider().getToken;
+      throw Exception('Error fetching data: $e $token');
+    }
+  }
+
   Future<int> _getPoliceId(int userId) async {
     PoliceService policeService = PoliceService();
 
@@ -135,5 +165,63 @@ class IncidentService {
     } catch (e) {
       throw Exception('Error: $e');
     }
+  }
+
+  Future<List<Incident>> fetchNearIncidents(double latitude, double longitude, int km) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/near/$km?latitude=$latitude&longitude=$longitude'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+      return jsonResponse.map((incident) => Incident.fromJson(incident)).toList();
+    } else {
+      throw Exception('Failed to load incidents');
+    }
+  }
+}
+
+class Incident {
+  final int id;
+  final double latitude;
+  final double longitude;
+  final String description;
+  final String date;
+  final String address;
+  final String district;
+  final String status;
+  final List<dynamic> police;
+
+  Incident({
+    required this.id,
+    required this.latitude,
+    required this.longitude,
+    required this.description,
+    required this.date,
+    required this.address,
+    required this.district,
+    required this.status,
+    required this.police,
+  });
+
+  factory Incident.fromJson(Map<String, dynamic> json) {
+    return Incident(
+      id: json['id'],
+      latitude: double.parse(json['latitude']),
+      longitude: double.parse(json['longitude']),
+      description: json['description'],
+      date: json['date'],
+      address: json['address'],
+      district: json['district'],
+      status: json['status'],
+      police: json['police'],
+    );
   }
 }
