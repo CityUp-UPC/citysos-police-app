@@ -1,6 +1,5 @@
 import 'package:citysos_police/views/home_view.dart';
-import 'package:citysos_police/views/login_view.dart';
-import 'package:citysos_police/views/inprogress_view.dart';
+import 'package:citysos_police/views/news_view.dart';
 import 'package:citysos_police/views/history_view.dart';
 import 'package:citysos_police/views/user_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,7 +33,7 @@ class _NavbarState extends State<Navbar> {
 
     final views = [
       const Home(),
-      const InProgress(),
+      const NewsView(),
       const History(),
       const User(),
     ];
@@ -71,7 +70,7 @@ class _NavbarState extends State<Navbar> {
             label: 'Inicio',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_police_outlined),
+            icon: Icon(Icons.newspaper_outlined),
             activeIcon: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -79,10 +78,10 @@ class _NavbarState extends State<Navbar> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.local_police_rounded, color: colors.primary),
+                child: Icon(Icons.newspaper_rounded, color: colors.primary),
               ),
             ),
-            label: 'En Progreso',
+            label: 'Noticias',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart_outlined),

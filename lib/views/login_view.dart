@@ -63,30 +63,52 @@ class _LoginState extends State<LoginAdmin> {
 
       final response = await _authService.login(username, password, _deviceToken ?? 'no-device-token');
 
-      final Map<String, dynamic> tokenData = jsonDecode(response.body) as Map<String, dynamic>;
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> tokenData = jsonDecode(response.body) as Map<String, dynamic>;
 
-      if (tokenData['token'] != null && tokenData['token'].toString().isNotEmpty) {
-        Provider.of<AuthProvider>(context, listen: false).login(tokenData['token'].toString());
-      } else {
-        // Show error message
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: const Text('Usuario o contraseña incorrectos'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cerrar'),
-                ),
-              ],
-            );
-          },
-        );
+        if (tokenData['token'] != null && tokenData['token'].toString().isNotEmpty) {
+          Provider.of<AuthProvider>(context, listen: false).login(tokenData['token'].toString());
+        } else {
+          // Show error message
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Usuario o contraseña incorrectos'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Cerrar'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       }
+      else
+        {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Error'),
+                content: const Text('Usuario o contraseña incorrectos'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Cerrar'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
     }
   }
 
