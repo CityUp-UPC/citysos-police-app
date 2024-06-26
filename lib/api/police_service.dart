@@ -69,4 +69,27 @@ class PoliceService {
       throw Exception('Error fetching data: $e');
     }
   }
+
+  Future<dynamic> updatePolice(int policeId, Map<String, dynamic> updateData) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token') ?? '';
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/$policeId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(updateData),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to update police');
+      }
+    } catch (e) {
+      throw Exception('Error updating data: $e');
+    }
+  }
 }

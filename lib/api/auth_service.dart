@@ -18,11 +18,57 @@ class AuthService {
         }),
         headers: {'Content-Type': 'application/json'},
       );
+      if (response.statusCode == 200) {
+        return response;
+      } else if (response.statusCode == 401) {
+        throw UnauthorizedException('Usuario o contraseña incorrectos');
+      } else {
+        throw Exception('Error al iniciar sesión');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar con el servidor');
+    }
+  }
+
+  Future<http.Response> register (
+      String username,
+      String firstName,
+      String lastName,
+      String email,
+      String password,
+      String phoneNumber,
+      String dni,
+      String deviceToken,
+      String district) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/register-user'),
+        body: jsonEncode({
+          'username': username,
+          'firstName': firstName,
+          'lastName': lastName,
+          'email': email,
+          'password': password,
+          'phoneNumber': phoneNumber,
+          'dni': dni,
+          'deviceToken': deviceToken,
+          'district': district,
+        }),
+        headers: {'Content-Type': 'application/json'},
+      );
 
       return response;
     } catch (e) {
-      print('Error during login: $e');
-      throw Exception('Failed to login');
+      print('Error during register: $e');
+      throw Exception('Failed to register');
     }
   }
+}
+
+class UnauthorizedException implements Exception {
+  final String message;
+  UnauthorizedException(this.message);
+
+  @override
+  String toString() => 'UnauthorizedException: $message';
 }
