@@ -12,7 +12,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late Future<List<Map<String, dynamic>>> _futureIncidents;
-  final _incidentService = IncidentService(); // Instantiate IncidentService
+  final _incidentService = IncidentService();
 
   @override
   void initState() {
