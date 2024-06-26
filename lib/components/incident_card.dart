@@ -13,6 +13,7 @@ class IncidentCard extends StatelessWidget {
   final double latitude;
   final double longitude;
   final String status;
+  final Function() onIncidentAccepted; // Callback function
 
   const IncidentCard({
     Key? key,
@@ -24,6 +25,7 @@ class IncidentCard extends StatelessWidget {
     required this.latitude,
     required this.longitude,
     required this.status,
+    required this.onIncidentAccepted, // Callback function passed in constructor
   }) : super(key: key);
 
   @override
@@ -145,6 +147,7 @@ class IncidentCard extends StatelessWidget {
   void _acceptIncident(BuildContext context) { // Accept context as a parameter
     PoliceService policeService = PoliceService();
     policeService.joinIncident(id).then((response) {
+      onIncidentAccepted();
       showDialog(
         context: context,
         builder: (context) {

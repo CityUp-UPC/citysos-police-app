@@ -56,7 +56,7 @@ class _NavbarState extends State<Navbar> {
         selectedLabelStyle: TextStyle(color: colors.primary),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.crisis_alert_rounded),
             activeIcon: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -64,10 +64,10 @@ class _NavbarState extends State<Navbar> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.home_filled, color: colors.primary),
+                child: Icon(Icons.crisis_alert_rounded, color: colors.primary),
               ),
             ),
-            label: 'Inicio',
+            label: 'Incidentes',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.newspaper_outlined),
