@@ -35,23 +35,6 @@ class _NewsViewState extends State<NewsView> {
     } catch (e) {
       setState(() {
         isLoading = false;
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: Text('Hubo un error cargando noticias: $e'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
       });
     }
   }
@@ -83,12 +66,12 @@ class _NewsViewState extends State<NewsView> {
         ),
         backgroundColor: Colors.red,
       ),
-      body: isLoading || newsList.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
+      body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
               itemCount: newsList.length,
               itemBuilder: (context, index) {
                 var newsItem = newsList[index];
@@ -103,9 +86,7 @@ class _NewsViewState extends State<NewsView> {
                 }
 
                 return GestureDetector(
-                  onTap: () {
-                    _showCommentsDialog(newsItem);
-                  },
+                  onTap: () {},
                   child: Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
@@ -189,8 +170,7 @@ class _NewsViewState extends State<NewsView> {
               borderRadius: BorderRadius.circular(8.0), // Rounded corners
             ),
             margin: const EdgeInsets.all(10),
-            child:
-            Row(
+            child: Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
@@ -294,6 +274,12 @@ class _NewsFormDialogState extends State<NewsFormDialog> {
   final List<File> _photoFiles = [];
 
   @override
+  void initState() {
+    super.initState();
+    _requestPhotoPermission();
+  }
+
+  @override
   void dispose() {
     _descriptionController.dispose();
     super.dispose();
@@ -349,6 +335,13 @@ class _NewsFormDialogState extends State<NewsFormDialog> {
         ),
       ],
     );
+  }
+
+  void _requestPhotoPermission() async {
+    PermissionStatus status = await Permission.photos.status;
+    if (!status.isGranted) {
+      await Permission.photos.request();
+    }
   }
 
   void _publishNews() async {
@@ -413,8 +406,8 @@ class _NewsFormDialogState extends State<NewsFormDialog> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Permissions Required'),
-          content: const Text('Please grant permission to access photos.'),
+          title: const Text('Permiso denegado'),
+          content: const Text('Por favor permita el acceso a la galería de fotos en la configuración de la aplicación.'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -435,7 +428,7 @@ class _NewsFormDialogState extends State<NewsFormDialog> {
         });
       }
     } catch (e) {
-      print('Error picking image: $e');
+      print('Error cargando imagen: $e');
     }
   }
 }

@@ -142,8 +142,7 @@ class _HomeState extends State<Home> {
           ),
           SizedBox(
             width: double.infinity,
-            child:
-            Padding(
+            child: Padding(
               padding: const EdgeInsets.all(8.0), // Adjust the margin as needed
               child: ElevatedButton(
                 onPressed: () {
@@ -154,7 +153,7 @@ class _HomeState extends State<Home> {
                         title: const Text('Incidentes pendientes'),
                         content: SizedBox(
                           width: double.maxFinite,
-                          height: 300.0, // Adjust height as needed
+                          height: double.maxFinite,
                           child: ListView.builder(
                             itemCount: _incidents.length,
                             itemBuilder: (context, index) {
@@ -219,6 +218,22 @@ class _HomeState extends State<Home> {
             onIncidentAccepted: _handleIncidentJoin, // Pass callback function
           );
         },
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _isLoading = true;
+          });
+          _refreshIncidents(); // Refresh incidents when floating button is pressed
+        },
+        tooltip: 'Refrescar',
+        backgroundColor: Colors.grey,
+        child: const Icon(
+          Icons.refresh,
+          color: Colors.white,
+          size: 24.0,
+        ),
       ),
     );
   }
