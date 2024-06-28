@@ -222,10 +222,7 @@ class _HomeState extends State<Home> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            _isLoading = true;
-          });
-          _refreshIncidents(); // Refresh incidents when floating button is pressed
+          _refreshIncidents();
         },
         tooltip: 'Refrescar',
         backgroundColor: Colors.grey,

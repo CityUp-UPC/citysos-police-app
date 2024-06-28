@@ -53,7 +53,7 @@ class NewService {
     }
   }
 
-  Future<dynamic> publishNews(String description, List<File>files) async {
+  Future<dynamic> publishNews(String description, List<File> files) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String token = prefs.getString('token') ?? '';
@@ -61,28 +61,28 @@ class NewService {
 
       int policeId = await _getPoliceId(userId);
 
+      List<String> base64Files = [];
+      for (var file in files) {
+        List<int> fileBytes = await file.readAsBytes();
+        String base64File = base64Encode(fileBytes);
+        base64Files.add(base64File);
+      }
+
       final response = await http.post(
         Uri.parse('$apiUrlGlobal/api/v1/polices/$policeId/news'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
         },
-        body: jsonEncode(
-          {
-            'description': description,
-            'files': files,
-            'district': '',
-          },
-        ),
+        body: jsonEncode({
+          'description': description,
+          'files': base64Files,
+          'district': '', // Example of another field if required by your API
+        }),
       );
 
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Failed to join incident');
-      }
+      return jsonDecode(response.body);
     } catch (e) {
-      throw Exception('Error fetching data: $e');
+      throw Exception('Error publishing news: $e');
     }
   }
 }

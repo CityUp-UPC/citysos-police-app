@@ -312,7 +312,8 @@ class _NewsFormDialogState extends State<NewsFormDialog> {
                   (file) => Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(file.path), // Display file path or name
+                  child:
+                    Image.file(file, width: 100, height: 100, fit: BoxFit.cover)
                 ),
               ),
             )
@@ -351,7 +352,7 @@ class _NewsFormDialogState extends State<NewsFormDialog> {
 
     if (description.isNotEmpty && files.isNotEmpty) {
       try {
-        dynamic response = await newsService.publishNews(description, files);
+        dynamic response = await newsService.publishNews(description.toString(), files);
 
         print('News published successfully: $response');
 
@@ -400,23 +401,41 @@ class _NewsFormDialogState extends State<NewsFormDialog> {
   }
 
   void _checkPermissionAndPickImage() async {
-    if (await Permission.photos.request().isGranted) {
-      _pickImage();
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Permiso denegado'),
-          content: const Text('Por favor permita el acceso a la galería de fotos en la configuración de la aplicación.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
+    final status = await Permission.photos.request();
+
+    _pickImage();
+
+    // if (status.isGranted) {
+    //   _pickImage();
+    // } else if (status.isDenied) {
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(
+    //       title: const Text('Permiso denegado'),
+    //       content: const Text('Por favor permita el acceso a la galería de fotos en la configuración de la aplicación.'),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           onPressed: () => Navigator.pop(context),
+    //           child: const Text('OK'),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // } else if (status.isPermanentlyDenied) {
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(
+    //       title: const Text('Permiso denegado'),
+    //       content: const Text('El acceso a la galería de fotos está permanentemente denegado. Por favor, habilite el acceso en la configuración de la aplicación.'),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           onPressed: () => Navigator.pop(context),
+    //           child: const Text('OK'),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
   }
 
   void _pickImage() async {
